@@ -46,8 +46,8 @@ jobs:
         gcloud config set artifacts/repository swarmly-python-repo
         gcloud config set artifacts/location australia-southeast1
         gcloud config set account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com
-        
-        gcloud auth activate-service-account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com --project=rare-ethos-384523 --key-file=$GCP_CREDS
-        
+        echo $GCP_CREDS >> temp.json
+        gcloud auth activate-service-account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com --project=rare-ethos-384523 --key-file=temp.json
+        rm temp.json
         gcloud artifacts print-settings python > ~/.pypirc
         python -m twine upload --repository rprod dist/*
