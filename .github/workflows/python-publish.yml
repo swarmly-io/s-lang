@@ -41,11 +41,11 @@ jobs:
         credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
     - name: Upload to Artifact Registry
       run: |
-        gcloud config set artifacts/repository foo
-        gcloud config set artifacts/location us-central1
-        gcloud config set account github-gcr-service-account@norrin-radd.iam.gserviceaccount.com
+        gcloud config set artifacts/repository s-lang
+        gcloud config set artifacts/location australia-southeast1
+        gcloud config set account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com
         
-        gcloud auth activate-service-account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com --key-file=$GOOGLE_APPLICATION_CREDENTIALS --project=norrin-radd
+        gcloud auth activate-service-account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com --key-file=$GOOGLE_APPLICATION_CREDENTIALS --project=rare-ethos-384523
         
         gcloud artifacts print-settings python > ~/.pypirc
         python -m twine upload --repository rprod dist/*
