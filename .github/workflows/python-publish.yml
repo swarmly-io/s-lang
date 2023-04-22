@@ -19,8 +19,6 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
-    env:
-      GOOGLE_APPLICATION_CREDENTIALS: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
     steps:
     - uses: actions/checkout@v3
@@ -38,6 +36,8 @@ jobs:
     - name: Build package
       run: python setup.py sdist bdist_wheel
     - id: 'auth'
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: '${{ secrets.GOOGLE_CREDENTIALS }}'
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v0'
       with:
