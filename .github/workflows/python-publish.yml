@@ -38,9 +38,9 @@ jobs:
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v0'
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: '${{ secrets.GOOGLE_CREDENTIALS }}'
+        GOOGLE_APPLICATION_CREDENTIALS: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
       with:
-        credentials_json: '${{ env.GOOGLE_CREDENTIALS }}'
+        credentials_json: '${{ env.GOOGLE_APPLICATION_CREDENTIALS }}'
     - name: Upload to Artifact Registry
       run: |
         gcloud config set artifacts/repository foo
