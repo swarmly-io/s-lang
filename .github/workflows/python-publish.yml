@@ -40,12 +40,14 @@ jobs:
       with:
         credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
     - name: Upload to Artifact Registry
+      env:
+        GCP_CREDS: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
       run: |
         gcloud config set artifacts/repository swarmly-python-repo
         gcloud config set artifacts/location australia-southeast1
         gcloud config set account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com
         
-        gcloud auth activate-service-account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com --project=rare-ethos-384523 --key-file='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+        gcloud auth activate-service-account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com --project=rare-ethos-384523 --key-file=$GCP_CREDS
         
         gcloud artifacts print-settings python > ~/.pypirc
         python -m twine upload --repository rprod dist/*
