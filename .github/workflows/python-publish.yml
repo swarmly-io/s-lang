@@ -9,8 +9,8 @@
 name: Release Python Package
 
 on:
-  push:
-   branches: [ main ]
+  release:
+    types: [published]
 
 permissions:
   contents: read
