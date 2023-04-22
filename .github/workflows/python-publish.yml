@@ -41,7 +41,7 @@ jobs:
         credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
     - name: Upload to Artifact Registry
       run: |
-        gcloud config set artifacts/repository s-lang
+        gcloud config set artifacts/repository swarmly-python-repo
         gcloud config set artifacts/location australia-southeast1
         gcloud config set account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com
         
