@@ -1,10 +1,10 @@
-# setup.py
-
 from setuptools import setup, find_packages
+import os
+build_num = os.getenv("GITHUB_RUN_NUMBER") or 0
 
 setup(
     name='s_lang',
-    version='0.1.0',
+    version='0.1.0.' + build_num,
     description='The swarmly language based on yaml and pydantic',
     author='Adrian Plani',
     author_email='adrian@swarmly.io',
