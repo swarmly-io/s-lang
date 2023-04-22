@@ -50,4 +50,4 @@ jobs:
         gcloud auth activate-service-account swarmly-git@rare-ethos-384523.iam.gserviceaccount.com --project=rare-ethos-384523 --key-file=temp.json
         rm temp.json
         gcloud artifacts print-settings python > ~/.pypirc
-        python -m twine upload --repository rprod dist/*
+        python -m twine upload --repository swarmly-python-repo dist/*
