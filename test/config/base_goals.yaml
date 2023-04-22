@@ -1,0 +1,28 @@
+- name: stay alive
+  success:
+    - when: mean.health_level
+      gt: 10
+    - when: health_level
+      gt: 2
+  failure:
+    - when: health_level
+      eq: 0
+      total: true
+  continue: True
+- name: become lumberjack
+  success:
+    - when: performed.collect_wood
+- name: craft a pick axe
+  success:
+    - when: performed.crafting_wooden_pickaxe
+- name: craft a stone pick axe
+  success:
+    - when: performed.crafting_stone_pickaxe
+- name: make money
+  success:
+    - when: account.balance
+      gt: 0
+- name: maintain personal resource levels
+  success:
+    - when: basic_resource_levels.satisfied
+      eq: true

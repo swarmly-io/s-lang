@@ -1,0 +1,45 @@
+- name: hunting
+  rules:
+      - when: animal.type
+        eq: cat
+        then: meat = None
+        else: meat = animal.meat
+      - when: meat
+        eq: null
+        then: stop
+      - when: food_level
+        gt: needed_food_level
+        then: stop
+      - when: furnace
+        ne: null
+        then: 
+          - cook
+          - meat.state = "cooked"
+        else: 
+          - meat.state = "raw"
+          # implementation?
+          - craft_furnace        
+      - when: meat.state
+        eq: cooked 
+        then: food_level = food_level + 2
+      - when: meat.state
+        eq: raw
+        choose: 0.5
+        then: 
+            - food_level = food_level + 1
+            - food_level = food_level - 1
+      - when: food_level
+        increased: true
+        then: eat
+        else: stop
+      # implementation detail?
+      - when: inventory
+        contains:
+          - sword
+          - axe
+          - pickaxe
+          - shovel
+          - hoe
+        then: select_weapon
+
+   

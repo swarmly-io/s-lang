@@ -1,0 +1,23 @@
+- task: run
+  perform:
+  - find: safe_location
+  - act: run_to_target
+  - verify: 
+      - when: dangerous_entities
+        len: 0
+      - elapsed: 2
+        unit: seconds
+- task: fight
+  perform:
+  - lookup: closest_dangerous_entity
+  - act: fight
+  - verify:
+      - when: closest_dangerous_entity.health_estimate
+        eq: 0
+      - when: dangerous_entities
+        len: 0
+      - when: health_level
+        gte: 2
+  - failed:
+      - stop
+      - run
