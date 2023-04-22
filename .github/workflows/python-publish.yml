@@ -19,8 +19,6 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
-    env:
-      GOOGLE_APPLICATION_CREDENTIALS: '${{ secrets.GOOGLE_CREDENTIALS }}'
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python
@@ -39,8 +37,10 @@ jobs:
     - id: 'auth'
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v0'
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: '${{ secrets.GOOGLE_CREDENTIALS }}'
       with:
-        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+        credentials_json: '${{ env.GOOGLE_CREDENTIALS }}'
     - name: Upload to Artifact Registry
       run: |
         gcloud config set artifacts/repository foo
