@@ -14,5 +14,8 @@ Apply the output changes to the relevant pip files.
 Run:
 ```pip install s-lang```
 
-# Info
-Statements 
+# Getting started
+Statements are the top level operators for each concept. When building a graph, these will be nodes and the contents of each statement can itself contain statements which evaluate to nodes or operators which are evaluated to adjust the edge or node properties of the statement node. 
+
+Operators parse rules and operate on state to either produce a value which can be resolved contextually by the specific operator or produce a signal which can be used to create a link to another node, for example.
+
