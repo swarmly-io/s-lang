@@ -3,7 +3,7 @@ from typing import List
 
 from lang.operators.base_lang import BaseLangState
 from lang.statements.statements import BaseStatement
-from lang.core.task import TaskOperator
+from lang.operators.core.task import TaskOperator
 
 class TaskStatements(BaseStatement):
     task: str

@@ -1,7 +1,7 @@
 from copy import deepcopy
 from typing import List
 
-from lang.core.goal import GoalOperator
+from lang.operators.core.goal import GoalOperator
 from lang.operators.base_lang import BaseLangState
 from lang.statements.statements import BaseStatement
 

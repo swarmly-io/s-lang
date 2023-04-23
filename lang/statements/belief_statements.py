@@ -1,7 +1,7 @@
 from copy import deepcopy
 from typing import List
 
-from lang.core.belief import BeliefOperator
+from lang.operators.core.belief import BeliefOperator
 from lang.operators.base_lang import BaseLangState
 from lang.statements.statements import BaseStatement
 
