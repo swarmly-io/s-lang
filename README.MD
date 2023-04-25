@@ -19,3 +19,9 @@ Statements are the top level operators for each concept. When building a graph, 
 
 Operators parse rules and operate on state to either produce a value which can be resolved contextually by the specific operator or produce a signal which can be used to create a link to another node, for example.
 
+# First Steps
+In order to build our decision tree we need to start by computing the beliefs of the current state. Each computed belief should produce a graph in which nodes can be mapped to unique global nodes and then connect to the task and belief graphs.
+
+With those nodes created we can as needed compute the task and belief graphs.
+
+
