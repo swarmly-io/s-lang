@@ -24,6 +24,9 @@ In order to build our decision tree we need to start by computing the beliefs of
 
 With those nodes created we can as needed compute the task and belief graphs.
 
+### Run the tests
+You can run the tests using the ```pytest``` command, alternatively run the tests through vscode using the test adapter extension.
+
 ### Extra tips
 Each statement and operator should have a to_node and to_edge function. 
 There should be a seperate class which maps and joins different graphs

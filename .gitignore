@@ -4,3 +4,4 @@ venv
 build/*
 dist/*
 s_lang.egg-info/*
+.vscode/settings.json

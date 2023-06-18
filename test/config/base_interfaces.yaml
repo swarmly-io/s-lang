@@ -1,0 +1,5 @@
+interfaces:
+  - name: minecraft actions
+    schema_endpoint: 
+  - name: trade
+    schema_endpoint:  
