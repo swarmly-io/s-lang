@@ -1,0 +1,56 @@
+- name: stay alive
+  type: survival
+  failure:
+    - tag: health_low
+    - tag: health_critical
+    - tag: zombie_close
+    - tag: food_low
+    - tag: food_inventory_low
+  success:
+    - tag: health_high
+    - tag: food_inventory_high
+    - tag: food_high
+    - tag: zombie_far
+- name: have shelter
+  type: survival
+  success:
+    - tag: got_shelter
+  failure:
+    - tag: no_shelter
+- name: have defence
+  type: survival
+  success:
+    - tag: got_weapon
+    - tag: got_armour
+  failure:
+    - tag: no_weapon
+    - tag: no_armour
+- name: have tools'
+  type: survival
+  success:
+    - tag: got_tools
+  failure:
+    - tag: no_tools
+- name: make money
+  type: goal
+  success:
+    - when: account.balance
+      gt: money_demand_level
+    - tag: completed_job
+    - tag: got_credit
+    - tag: got_paid
+  failure:
+    - when: account.balance
+      lt: money_demand_level
+    - tag: no_jobs
+    - tag: stuck
+- name: fulfilling goals
+  type: goal
+  success:
+    - tag: goal_succeeded
+    - tag: on_task
+  failure:
+    - tag: goal_failed
+    - tag: stuck
+    - tag: no_task
+
