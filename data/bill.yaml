@@ -37,6 +37,15 @@ tags:
   - on_task
   - no_armour
   - got_weapon
+actions:
+  - mine
+  - collect
+  - fight
+  - hunt
+  - eat
+  - craft
+  - smelt
+  - trade
 goals:
   - name: stay alive
     type: survival
