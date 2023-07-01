@@ -1,15 +1,17 @@
 from pydantic import BaseModel
-from typing import Dict, List
+from typing import Dict, List, Optional
 from enum import Enum
 
 class TagType(str, Enum):
+    THREAT = "threat"
     SURVIVAL = "survival"
     GOAL = "goal"
     VALUE = "value"
 
 class Tag(BaseModel):
     name: str
-    type: TagType
+    group: str
+    type: Optional[TagType]
 
 class Priority(BaseModel):
     name: str

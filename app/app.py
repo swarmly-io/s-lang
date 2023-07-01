@@ -18,21 +18,19 @@ def configure_agent(name: str):
     tags_to_priority = TagToPriority(**{})
     goals = []
     tags = []
-    actions = []
+    tags = { t.name:t for t in config.tags }
     for goal in config.goals:
         priority = Priority(name = goal.name)
         requests.post(PRIORITIES_URL + "/add_priority", priority.json())
         
         # todo some tags may not match the goal type
-        goal_tags = [Tag(name=t, type = goal.type) for t in goal.success + goal.failure]
+        goal_tags = [tags[t] for t in goal.success + goal.failure]
         for t in goal_tags:
             tags_to_priority[t] = (tags_to_priority.get(t) or []) + [goal.name]
             
         tags = tags + goal_tags
-
-        # goals go to knowledge service -> get converted to graph
-        # todo
-    agent = AgentDto(name=name, goals = goals, tag_list = tags, actions = config.actions)
+    
+    agent = AgentDto(name=name, goals = goals, tag_list = tags, actions = config.actions, groups = config.groups)
     requests.post(KNOWLEDGE_URL + "/create_agent", agent)
     
     requests.post(PRIORITIES_URL + "add_tag_to_priority", tags_to_priority)
