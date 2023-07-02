@@ -37,10 +37,10 @@ tags:
   - name: no_health
     group: health
     type: survival
-  - name: low_health
+  - name: health_low
     group: health
     type: survival
-  - name: high_health
+  - name: health_high
     group: health
     type: survival
   - name: health_critical
@@ -139,6 +139,7 @@ goals:
       - tag: zombie_close
       - tag: food_low
       - tag: food_inventory_low
+      - tag: no_health
     success:
       - tag: health_high
       - tag: food_inventory_high

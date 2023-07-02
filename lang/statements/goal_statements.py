@@ -16,7 +16,7 @@ class GoalStatement(BaseModel):
     success: List[GoalSuccess] = []
     failure: List[GoalFailure] = []
 
-class GroupType(Enum, str):
+class GroupType(str, Enum):
     ORDERED_RANKED = "ordered_rank"
     BINARY = "binary"
     CUSTOM_FUNCTION = "function"
