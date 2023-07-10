@@ -12,6 +12,7 @@ class Tag(BaseModel):
     name: str
     group: str
     type: Optional[TagType]
+    value: int = 0
 
 class Priority(BaseModel):
     name: str
