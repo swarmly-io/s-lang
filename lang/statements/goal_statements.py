@@ -1,30 +1,8 @@
 from enum import Enum
 from typing import List
-from app.models.priority import Tag, TagType
+from domain_models.decisions.goals import Tag, GoalStatement, Group
 from pydantic import BaseModel
 import yaml
-
-class GoalSuccess(BaseModel):
-    tag: str
-
-class GoalFailure(BaseModel):
-    tag: str
-
-class GoalStatement(BaseModel):
-    name: str
-    type: TagType
-    success: List[GoalSuccess] = []
-    failure: List[GoalFailure] = []
-
-class GroupType(str, Enum):
-    ORDERED_RANKED = "ordered_rank"
-    BINARY = "binary"
-    CUSTOM_FUNCTION = "function"
-
-class Group(BaseModel):
-    name: str
-    type: GroupType
-    rank: int
     
 class GoalsConfig(BaseModel):
     indexes: List[str]

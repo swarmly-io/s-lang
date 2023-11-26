@@ -1,14 +1,16 @@
 import json
 from typing import List
+from aiokafka import AIOKafkaProducer
 
 from pydantic import BaseModel
 from app.agent_state import AgentMCState
 from app.endpoints import KNOWLEDGE_URL, PROCESSES_URL, json_headers
-from app.models.knowledge import AgentDto
-from app.models.priority import Priority, Tag, TagToPriority
+from domain_models.decisions.paths import AgentDto
 from fastapi import Depends, FastAPI
 from lang.statements.goal_statements import Action, parse_goals_config
 import requests
+
+from domain_models.messaging.task_events import SubscriberEvent
 
 app = FastAPI()
 
@@ -23,35 +25,31 @@ def number_objects(objects):
     return objects
 
 @app.get("/config/{name}")
-def configure_agent(name: str):
+async def configure_agent(name: str):
+    bootstrap_servers = "localhost:9092"
+    producer = AIOKafkaProducer(bootstrap_servers=bootstrap_servers)
+    await producer.start()
+    
     print(f"making {name}")
     config = parse_goals_config(f"./data/{name}.yaml")
     
-    # tags go to prioritisation service - create Goal to tag objects
-    tags_to_priority = TagToPriority(**{})
     tags = []
     config.tags = number_objects(config.tags)
     tags_dict = { t.name:t for t in config.tags }
     map_tag = lambda x: list(map(lambda z: z.tag, x))
-    for goal in config.goals:
-        #priority = Priority(name = goal.name, tags = )
-        #requests.post(PRIORITIES_URL + "/add_priority", priority.json())
-        
+    for goal in config.goals:        
         # todo some tags may not match the goal type
         goal_tags = [tags_dict[t] for t in map_tag(goal.success) + map_tag(goal.failure)]
-        #for t in goal_tags:
-         #   tags_to_priority[t] = (tags_to_priority.get(t) or []) + [goal.name]
-        
         tags = tags + goal_tags
 
     actions = list(map(lambda x: Action(name=x), config.actions))
     call_responses = []
     agent = AgentDto(name=name, goals = config.goals, tag_list = tags, actions = actions, groups = config.groups)
-    agent_response = requests.post(KNOWLEDGE_URL + "/create_agent", data=agent.json(), headers=json_headers)
+    requests.post(KNOWLEDGE_URL + f"/{agent.name}/init", headers=json_headers)
+
+    agent_response = requests.post(KNOWLEDGE_URL + f"/{agent.name}/create_agent", data=agent.json(), headers=json_headers)
     call_responses.append((agent_response.status_code, agent_response.json()))
-    #requests.post(PRIORITIES_URL + "add_tag_to_priority", tags_to_priority)
-    
-    # tag_links go to knowledge -> parsed to connect goals to end nodes of paths
+
     invalid_data = []
     for tl in config.tag_links:
         tag, action, index, node = (tl + ",,,").split(",")[0:4]
@@ -73,15 +71,12 @@ def configure_agent(name: str):
         
     links_response = requests.post(KNOWLEDGE_URL + f"/{name}/tag_links", data=json.dumps(config.tag_links), headers=json_headers)
     call_responses.append((links_response.status_code, links_response.json()))
-    # todo post agent_config.py to knowledge
     
-    try:
-        processes_response = requests.get(PROCESSES_URL + f"/start/{name}")
-        call_responses.append((processes_response.status_code, {}))
-    except:
-        processes_response = requests.get(PROCESSES_URL + f"/stop/{name}")
-        call_responses.append((processes_response.status_code, {}))
-
+    subscriber = SubscriberEvent.default(agent.name)
+    await producer.send("processes", subscriber.to_json())
+    
+    await producer.stop()
+    
     return call_responses
 
 
