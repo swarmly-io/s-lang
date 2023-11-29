@@ -1,5 +1,6 @@
 more_itertools==9.1.0
-networkx==2.5.1
+networkx==3.1
 pydantic==1.10.2
-PyYAML==6.0
-setuptools==60.2.0
+PyYAML==6.0.1
+setuptools==67.8.0
+domain_models @ git+https://github.com/swarmly-io/domain-models.git@v0.1.0.45

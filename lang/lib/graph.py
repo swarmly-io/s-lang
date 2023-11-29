@@ -2,8 +2,8 @@ from enum import Enum
 from typing import List, Optional
 from uuid import UUID, uuid4
 from pydantic import Field
+from domain_models.id_model import IdModel
 
-from lang.lib.id_model import IdModel
 
 class NodeType(str, Enum):
     GOAL = "GOAL"

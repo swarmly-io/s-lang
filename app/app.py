@@ -3,7 +3,6 @@ from typing import List
 from aiokafka import AIOKafkaProducer
 
 from pydantic import BaseModel
-from app.agent_state import AgentMCState
 from app.endpoints import KNOWLEDGE_URL, PROCESSES_URL, json_headers
 from domain_models.decisions.paths import AgentDto
 from fastapi import Depends, FastAPI
@@ -11,6 +10,8 @@ from lang.statements.goal_statements import Action, parse_goals_config
 import requests
 
 from domain_models.messaging.task_events import SubscriberEvent
+from domain_models.minecraft.state import AgentMCState
+
 
 app = FastAPI()
 
@@ -25,11 +26,7 @@ def number_objects(objects):
     return objects
 
 @app.get("/config/{name}")
-async def configure_agent(name: str):
-    bootstrap_servers = "localhost:9092"
-    producer = AIOKafkaProducer(bootstrap_servers=bootstrap_servers)
-    await producer.start()
-    
+async def configure_agent(name: str):    
     print(f"making {name}")
     config = parse_goals_config(f"./data/{name}.yaml")
     
@@ -72,10 +69,14 @@ async def configure_agent(name: str):
     links_response = requests.post(KNOWLEDGE_URL + f"/{name}/tag_links", data=json.dumps(config.tag_links), headers=json_headers)
     call_responses.append((links_response.status_code, links_response.json()))
     
-    subscriber = SubscriberEvent.default(agent.name)
-    await producer.send("processes", subscriber.to_json())
-    
-    await producer.stop()
+    try:
+        bootstrap_servers = "localhost:9092"
+        producer = AIOKafkaProducer(bootstrap_servers=bootstrap_servers)
+        await producer.start()
+        subscriber = SubscriberEvent.default(agent.name)
+        await producer.send("processes", subscriber.to_json())
+    finally:
+        await producer.stop()
     
     return call_responses
 
