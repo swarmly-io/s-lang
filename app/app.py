@@ -1,16 +1,13 @@
 import json
-from typing import List
 from aiokafka import AIOKafkaProducer
 
-from pydantic import BaseModel
-from app.endpoints import KNOWLEDGE_URL, PROCESSES_URL, json_headers
+from app.endpoints import KNOWLEDGE_URL, json_headers
 from domain_models.decisions.paths import AgentDto
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from lang.statements.goal_statements import Action, parse_goals_config
 import requests
 
 from domain_models.messaging.task_events import SubscriberEvent
-from domain_models.minecraft.state import AgentMCState
 
 
 app = FastAPI()
@@ -79,52 +76,6 @@ async def configure_agent(name: str):
         await producer.stop()
     
     return call_responses
-
-
-class SimulationEvent(BaseModel):
-    agent_name: str
-    expected_tags: List[str]
-    
-class McSimulationEvent(SimulationEvent):
-    state: AgentMCState
-
-class History:
-    def __init__(self):
-        self.state_updates: List[McSimulationEvent] = []
-        self.current_state: McSimulationEvent = {}
-        
-    def add(self, state):
-        self.current_state = state
-        self.state_updates.append(state)
-        
-    def get_history(self):
-        return self
-
-history = History()
-
-@app.post("/simulate/state")
-def simulate_state(state: McSimulationEvent, history: History = Depends(history.get_history)):
-    history.add(state)
-    
-    # post to processes
-    response = requests.post(PROCESSES_URL, data=state.state.json(), headers=json_headers)
-    if response.status_code == 200:
-        print("Added state successfully")
-    
-    # post to knowledge
-    response = requests.post(KNOWLEDGE_URL + f"/update_state/{state.agent_name}", data=state.state.json(), headers=json_headers)
-    if response.status_code == 200:
-        print("Added state successfully to knowledge")
-    
-    # todo query processes for active tags, assert active tags with expected
-
-@app.get("/state/{name}")
-def state(name: str, history: History = Depends(history.get_history)):
-    if not history.current_state:
-        raise Exception("Current state doesn't exist")
-    
-    print("fetched state", name)
-    return history.current_state.state
 
 @app.get("/health")
 def health():
