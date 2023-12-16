@@ -1,7 +1,7 @@
 import json
 from aiokafka import AIOKafkaProducer
 
-from app.endpoints import KNOWLEDGE_URL, json_headers
+from app.endpoints import ENTITIES_URL, KNOWLEDGE_URL, json_headers
 from domain_models.decisions.paths import AgentDto
 from fastapi import FastAPI
 from lang.statements.goal_statements import Action, parse_goals_config
@@ -40,9 +40,13 @@ async def configure_agent(name: str):
     call_responses = []
     agent = AgentDto(name=name, goals = config.goals, tag_list = tags, actions = actions, groups = config.groups)
     requests.post(KNOWLEDGE_URL + f"/{agent.name}/init", headers=json_headers)
+    
 
     agent_response = requests.post(KNOWLEDGE_URL + f"/{agent.name}/create_agent", data=agent.json(), headers=json_headers)
     call_responses.append((agent_response.status_code, agent_response.json()))
+    
+    entities_agent_response = requests.post(ENTITIES_URL + f"/agent", data=agent.json(), headers=json_headers)
+    call_responses.append((entities_agent_response.status_code, entities_agent_response.json()))
 
     invalid_data = []
     for tl in config.tag_links:
@@ -65,6 +69,9 @@ async def configure_agent(name: str):
         
     links_response = requests.post(KNOWLEDGE_URL + f"/{name}/tag_links", data=json.dumps(config.tag_links), headers=json_headers)
     call_responses.append((links_response.status_code, links_response.json()))
+
+    entities_links_response = requests.post(ENTITIES_URL + f"/agent/{name}/state", data=json.dumps({ 'tag_links': config.tag_links }), headers=json_headers)
+    call_responses.append((entities_links_response.status_code, entities_links_response.json()))
     
     try:
         bootstrap_servers = "localhost:9092"

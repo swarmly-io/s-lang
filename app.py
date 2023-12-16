@@ -1,12 +1,13 @@
 import requests
 import uvicorn
 from app.app import app
-from app.endpoints import KNOWLEDGE_URL
+from app.endpoints import KNOWLEDGE_URL, ENTITIES_URL
 
 def on_start():
     try:
         return {
             "knowledge": requests.get(KNOWLEDGE_URL + "/health").status_code == 200,
+            "entities": requests.get(ENTITIES_URL + "/health").status_code == 200
         }
     except Exception as e:
         print(f"relevant processes arn't running {e}")

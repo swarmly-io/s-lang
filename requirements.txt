@@ -3,4 +3,5 @@ networkx==3.1
 pydantic==1.10.2
 PyYAML==6.0.1
 setuptools==67.8.0
-domain_models @ git+https://github.com/swarmly-io/domain-models.git@v0.1.0.45
+domain_models @ git+https://github.com/swarmly-io/domain-models.git@v0.1.2.7
+integrations @ git+https://github.com/swarmly-io/integrations.git@v0.0.0.1
