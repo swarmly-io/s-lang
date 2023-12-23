@@ -201,19 +201,21 @@ goals:
       - tag: no_task
 # make a path from an action to the end nodes
 tag_links:
-  # tag, action, index, optional node
-  - health_high, eat, foods, food
-  - health_low, eat, foods, food
-  - health_critical, fight, hostile_entities
-  - zombie_close, fight, hostile_entities
-  #- zombie_close, escape, hostile_entities
-  - got_credit, trade, trade, credit
-  - got_paid, trade, trade, credit
-  - food_low, collect, foods
-  - food_low, hunt, entities
-  - food_low, trade, foods
-  - food_high, collect, foods
-  - no_weapon, collect, weapons
-  - no_weapon, craft, weapons
-  - food_inventory_high, collect, foods
+    - "health_low, eat, items:foods",
+    - "health_critical, eat, items:foods",
+    - "zombie_close, fight, hostile_entities",
+    - "got_credit, trade, trade, credit",
+    - "no_credit, trade, trade, credit",
+    - "food_low, collect, foods",
+    - "food_low, hunt, entities",
+    - "food_low, trade, foods",
+    - "food_high, collect, foods",
+    - "no_weapon, collect, weapons",
+    - "no_weapon, craft, weapons",
+    - "no_tools, craft, items, wooden_pickaxe",
+    - "no_tools, craft, items, iron_pickaxe",
+    - "no_tools, craft, items, diamond_pickaxe",
+    - "no_tools, craft, items, wooden_axe",
+    - "food_inventory_high, collect, foods",
+    - "on_task, mine, blocks"
 
